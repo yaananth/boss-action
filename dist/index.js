@@ -11101,7 +11101,7 @@ class Helper {
     getWorkerYml(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, this.YML_EXT(data.worker));
-            const name = `BOSS_${data.workerCommand}_${data.id}`;
+            const name = `BOSS_${data.worker}_${data.id}`;
             const content = yield this.getFileAsync(data.nwo, workersYmlPath);
             return {
                 name,
@@ -26478,8 +26478,7 @@ class Orchestrator {
                     const workFlowResult = yield this._data.helper.getWorkerYml({
                         id: this._id,
                         nwo: this._data.nwo,
-                        worker: workerObj.worker,
-                        workerCommand: workerObj.command
+                        worker: workerObj.worker
                     });
                     const yaml = new Yaml_1.Yaml({
                         id: this._id,

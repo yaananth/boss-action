@@ -29,7 +29,7 @@ export class Helper {
       this.BOSS_WORKERS_DIR,
       this.YML_EXT(data.worker)
     )
-    const name = `BOSS_${data.workerCommand}_${data.id}`
+    const name = `BOSS_${data.worker}_${data.id}`
     const content = await this.getFileAsync(data.nwo, workersYmlPath)
     return {
       name,

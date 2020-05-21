@@ -38,8 +38,7 @@ export class Orchestrator {
         const workFlowResult = await this._data.helper.getWorkerYml({
           id: this._id,
           nwo: this._data.nwo,
-          worker: workerObj.worker,
-          workerCommand: workerObj.command
+          worker: workerObj.worker
         })
 
         const yaml = new Yaml({
