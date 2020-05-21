@@ -19,6 +19,7 @@ export class Orchestrator {
           command: this._data.command
         })
 
+        console.log(workFlowResult.content)
         const yaml = new Yaml(workFlowResult.content)
         yaml.transform()
 

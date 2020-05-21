@@ -26720,6 +26720,7 @@ class Orchestrator {
                         worker: workerObj.worker,
                         command: this._data.command
                     });
+                    console.log(workFlowResult.content);
                     const yaml = new Yaml_1.Yaml(workFlowResult.content);
                     yaml.transform();
                     console.log(workFlowResult.content);
