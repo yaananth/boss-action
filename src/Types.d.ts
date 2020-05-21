@@ -6,9 +6,7 @@ export interface IIssueComment {
   body: string
 }
 
-interface IRunnerContext {
-  os: string
-  tool_cache: string
-  temp: string
-  workspace: string
+export interface IWorkerJson {
+  command: string
+  worker: string
 }

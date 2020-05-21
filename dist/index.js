@@ -8485,8 +8485,12 @@ class Helper {
                 repo,
                 path: workersJsonPath
             });
-            return jsonResult.data.content;
+            return JSON.parse(Helper._decode(jsonResult.data.content));
         });
+    }
+    static _decode(encoded) {
+        const buff = Buffer.from(encoded, 'base64');
+        return buff.toString('utf-8');
     }
 }
 exports.Helper = Helper;
