@@ -9,4 +9,5 @@ jobs:
     - name: RunBoss
       uses: ./
       env:
+        BOSS_TOKEN: "${{ secrets.BOSS_TOKEN }}"
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
