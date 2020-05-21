@@ -1,0 +1,21 @@
+name: BOSS_hello_a42fc2dbd52be763e1fe9c1de6bdd2df
+'on':
+  repository_dispatch:
+    types:
+      - a42fc2dbd52be763e1fe9c1de6bdd2df
+jobs:
+  boss-at-work:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Hello
+        run: >
+          echo hey boss, I got ${{ github.event.client_payload.boss_payload_0
+          }}!
+      - name: Update issue comment
+        uses: simpleactions/create-issue-comment@v1.0.0
+        with:
+          body: 'hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!'
+          issue_number: 1
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
