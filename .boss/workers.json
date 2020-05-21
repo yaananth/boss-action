@@ -2,5 +2,9 @@
 {	
   "command": "(hello)([\\w+ ]+)",	
   "worker": "hello"	
+},
+{	
+  "command": "(reaction)([\\w+ ]+)!(\\w+)",	
+  "worker": "reaction"	
 }
 ]
