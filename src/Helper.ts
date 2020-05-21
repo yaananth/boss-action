@@ -59,7 +59,7 @@ export class Helper {
         owner: repoData.owner,
         repo: repoData.repo,
         path: workFlowPath,
-        content,
+        content: Helper._encode(content),
         message: this.BOSS_MESSAGE(command)
       }
     )
@@ -69,6 +69,11 @@ export class Helper {
   private static _decode(encoded: string): string {
     const buff = Buffer.from(encoded, 'base64')
     return buff.toString('utf-8')
+  }
+
+  private static _encode(decoded: string): string {
+    const buff = new Buffer(decoded)
+    return buff.toString('base64')
   }
 
   private async getFileAsync(nwo: string, filePath: string): Promise<string> {

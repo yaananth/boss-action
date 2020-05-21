@@ -8765,7 +8765,7 @@ jobs:
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: workFlowPath,
-                content,
+                content: Helper._encode(content),
                 message: this.BOSS_MESSAGE(command)
             });
             console.log(util.inspect(result, false, null, true));
@@ -8774,6 +8774,10 @@ jobs:
     static _decode(encoded) {
         const buff = Buffer.from(encoded, 'base64');
         return buff.toString('utf-8');
+    }
+    static _encode(decoded) {
+        const buff = new Buffer(decoded);
+        return buff.toString('base64');
     }
     getFileAsync(nwo, filePath) {
         return __awaiter(this, void 0, void 0, function* () {
