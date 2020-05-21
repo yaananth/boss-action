@@ -3782,8 +3782,9 @@ function run() {
             }
             //const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE as string
             const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+            const BOSS_TOKEN = process.env.BOSS_TOKEN;
             const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
-            const helper = new Helper_1.Helper(GITHUB_TOKEN, '');
+            const helper = new Helper_1.Helper(GITHUB_TOKEN, BOSS_TOKEN);
             const orchestrator = new Orchestrator_1.Orchestrator({
                 helper,
                 command: comment.replace(slashCommand, '').trim(),
@@ -8759,16 +8760,12 @@ jobs:
             const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
             console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
             // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
-            yield this._actionScopedGitHubClient.repos.createOrUpdateFile({
+            yield this._privateScopedGitHubClient.repos.createOrUpdateFile({
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: workFlowPath,
                 content,
-                message: this.BOSS_MESSAGE(command),
-                committer: {
-                    name: 'The Boss',
-                    email: 'yaananth@github.com'
-                }
+                message: this.BOSS_MESSAGE(command)
             });
         });
     }

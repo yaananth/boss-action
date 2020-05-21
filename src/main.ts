@@ -18,9 +18,10 @@ async function run(): Promise<void> {
 
     //const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE as string
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN as string
+    const BOSS_TOKEN = process.env.BOSS_TOKEN as string
     const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY as string
 
-    const helper = new Helper(GITHUB_TOKEN, '')
+    const helper = new Helper(GITHUB_TOKEN, BOSS_TOKEN)
     const orchestrator = new Orchestrator({
       helper,
       command: comment.replace(slashCommand, '').trim(),

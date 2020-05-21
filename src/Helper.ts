@@ -53,16 +53,12 @@ export class Helper {
       `Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
     // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
-    await this._actionScopedGitHubClient.repos.createOrUpdateFile({
+    await this._privateScopedGitHubClient.repos.createOrUpdateFile({
       owner: repoData.owner,
       repo: repoData.repo,
       path: workFlowPath,
       content,
-      message: this.BOSS_MESSAGE(command),
-      committer: {
-        name: 'The Boss',
-        email: 'yaananth@github.com'
-      }
+      message: this.BOSS_MESSAGE(command)
     })
   }
 
