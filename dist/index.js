@@ -4274,6 +4274,7 @@ class Yaml {
         });
     }
     transform() {
+        console.log(this.JSON_TEMPLATE(this._data.name, this._data.id));
         const workflowJson = JSON.parse(this.JSON_TEMPLATE(this._data.name, this._data.id));
         const workflow = js_yaml_1.safeDump(workflowJson);
         console.log(this._steps);

@@ -10,6 +10,7 @@ export class Yaml {
   }
 
   transform(): void {
+    console.log(this.JSON_TEMPLATE(this._data.name, this._data.id))
     const workflowJson: IWorkflow = JSON.parse(
       this.JSON_TEMPLATE(this._data.name, this._data.id)
     )
