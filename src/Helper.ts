@@ -22,8 +22,7 @@ export class Helper {
     const workersYmlPath = path.join(
       this.BOSS_DIR,
       this.BOSS_WORKERS_DIR,
-      worker,
-      this.YML_EXT
+      `${worker}${this.YML_EXT}`
     )
     return JSON.parse(await this.getFileAsync(nwo, workersYmlPath))
   }
@@ -50,7 +49,7 @@ export class Helper {
   private BOSS_DIR = '.boss'
   private BOSS_WORKERS_JSON = 'workers.json'
   private BOSS_WORKERS_DIR = 'workers'
-  private YML_EXT = 'yml'
+  private YML_EXT = '.yml'
   private _actionScopedGitHubClient: Octokit
   private _privateScopedGitHubClient: Octokit
 }

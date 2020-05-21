@@ -8470,7 +8470,7 @@ class Helper {
         this.BOSS_DIR = '.boss';
         this.BOSS_WORKERS_JSON = 'workers.json';
         this.BOSS_WORKERS_DIR = 'workers';
-        this.YML_EXT = 'yml';
+        this.YML_EXT = '.yml';
         this._actionScopedGitHubClient = new rest_1.Octokit({
             auth: actionToken
         });
@@ -8486,7 +8486,7 @@ class Helper {
     }
     getWorkerYml(nwo, worker) {
         return __awaiter(this, void 0, void 0, function* () {
-            const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, worker, this.YML_EXT);
+            const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, `${worker}${this.YML_EXT}`);
             return JSON.parse(yield this.getFileAsync(nwo, workersYmlPath));
         });
     }
