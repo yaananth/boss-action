@@ -83,7 +83,7 @@ export class Helper {
   }
 
   private static _encode(decoded: string): string {
-    const buff = new Buffer(decoded)
+    const buff = Buffer.alloc(decoded.length, decoded)
     return buff.toString('base64')
   }
 

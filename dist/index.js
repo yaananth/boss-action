@@ -11371,7 +11371,7 @@ class Helper {
         return buff.toString('utf-8');
     }
     static _encode(decoded) {
-        const buff = new Buffer(decoded);
+        const buff = Buffer.alloc(decoded.length, decoded);
         return buff.toString('base64');
     }
     getFileAsync(nwo, filePath) {
@@ -26736,7 +26736,7 @@ class Orchestrator {
                 console.log(`Regular expression check for ${workerObj.command}: `, regExResult);
                 if (regExResult.length >= 1) {
                     const command = regExResult[0];
-                    const params = regExResult.slice(1) || [];
+                    const params = regExResult.slice(2) || [];
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     let payload;
                     let counter = 0;

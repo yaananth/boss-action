@@ -19,7 +19,7 @@ export class Orchestrator {
       )
       if (regExResult.length >= 1) {
         const command = regExResult[0]
-        const params = regExResult.slice(1) || []
+        const params = regExResult.slice(2) || []
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let payload: any
