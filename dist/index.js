@@ -4255,12 +4255,12 @@ class Yaml {
     constructor(data) {
         this.JSON_TEMPLATE = (name, id) => `
 {
-  "name": "${name}"
+  "name": "${name}",
   "on": {
     "repository_dispatch": {
       "types": ["${id}"]
     }
-  }
+  },
   "jobs": {
     "boss-at-work": {
       "runs-on": "ubuntu-latest"

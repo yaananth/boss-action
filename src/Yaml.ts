@@ -24,12 +24,12 @@ export class Yaml {
   private readonly _data: IYamlData
   private JSON_TEMPLATE = (name: string, id: string) => `
 {
-  "name": "${name}"
+  "name": "${name}",
   "on": {
     "repository_dispatch": {
       "types": ["${id}"]
     }
-  }
+  },
   "jobs": {
     "boss-at-work": {
       "runs-on": "ubuntu-latest"
