@@ -6,6 +6,7 @@ async function run(): Promise<void> {
   try {
     const slashcommand = `/${core.getInput('slash')}`
     core.setOutput('slashcommand', slashcommand)
+    console.log(`Slash command is ${slashcommand}`)
     const comment: string = (context.payload as IIssuePayload).comment.body
     if (!comment.startsWith(slashcommand)) {
       core.setFailed(
