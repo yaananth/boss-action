@@ -4,3 +4,10 @@ steps:
 - name: Hello
   run: |
     echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!
+- name: Update issue comment
+  uses: simpleactions/create-issue-comment@v1.0.0
+  with:
+    body: "hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!"
+    issue_number: 1
+    github_token: "${{ secrets.GITHUB_TOKEN }}"
+
