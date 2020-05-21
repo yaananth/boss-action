@@ -8711,6 +8711,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(__webpack_require__(622));
+const util = __importStar(__webpack_require__(669));
 const rest_1 = __webpack_require__(889);
 class Helper {
     constructor(actionToken, patToken) {
@@ -8760,13 +8761,14 @@ jobs:
             const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
             console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
             // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
-            yield this._privateScopedGitHubClient.repos.createOrUpdateFile({
+            const result = yield this._privateScopedGitHubClient.repos.createOrUpdateFile({
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: workFlowPath,
                 content,
                 message: this.BOSS_MESSAGE(command)
             });
+            console.log(util.inspect(result, false, null, true));
         });
     }
     static _decode(encoded) {

@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as util from 'util'
 import {Octokit} from '@octokit/rest'
 import {
   IRepoData,
@@ -53,13 +54,16 @@ export class Helper {
       `Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
     // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
-    await this._privateScopedGitHubClient.repos.createOrUpdateFile({
-      owner: repoData.owner,
-      repo: repoData.repo,
-      path: workFlowPath,
-      content,
-      message: this.BOSS_MESSAGE(command)
-    })
+    const result = await this._privateScopedGitHubClient.repos.createOrUpdateFile(
+      {
+        owner: repoData.owner,
+        repo: repoData.repo,
+        path: workFlowPath,
+        content,
+        message: this.BOSS_MESSAGE(command)
+      }
+    )
+    console.log(util.inspect(result, false, null, true))
   }
 
   private static _decode(encoded: string): string {
