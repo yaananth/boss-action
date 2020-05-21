@@ -36,13 +36,17 @@ steps:
   uses: actions/checkout@v2
 - name: Hello
   run: |
-    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!
+    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!  for comment with Id ${{ github.event.client_payload.commentId }}
 ```
 
 ### Payloads from comments
 
 Payloads in your worker workflows can be obtained using prefix `github.event.client_payload`
-We inject payloads using keys `boss_payload_#payloadNumber`.
+This action injects payloads using keys `boss_payload_#payloadNumber`.
+
+This also injects additional payloads:
+
+- `github.event.client_payload.commentId`: Id of the `comment` that triggered this work
 
 Example:
 
