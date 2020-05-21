@@ -11096,14 +11096,14 @@ class Helper {
     getWorkersAsync(nwo) {
         return __awaiter(this, void 0, void 0, function* () {
             const workersJsonPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_JSON);
-            return JSON.parse(yield this.getFileAsync(nwo, workersJsonPath));
+            return JSON.parse(yield this._getFileContentAsync(nwo, workersJsonPath));
         });
     }
     getWorkerYml(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, this.YML_EXT(data.worker));
             const name = `BOSS_${data.worker}_${data.id}`;
-            const content = yield this.getFileAsync(data.nwo, workersYmlPath);
+            const content = yield this._getFileContentAsync(data.nwo, workersYmlPath);
             return {
                 name,
                 content
@@ -11115,13 +11115,17 @@ class Helper {
             const repoData = Helper.getRepoData(nwo);
             const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
             console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
+            const existingContent = yield this._getFileAsync(nwo, workFlowPath);
             // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
             yield this._privateScopedGitHubClient.repos.createOrUpdateFile({
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: workFlowPath,
                 content: Helper._encode(content),
-                message: this.BOSS_MESSAGE(command)
+                message: this.BOSS_MESSAGE(command),
+                sha: existingContent && existingContent.data
+                    ? existingContent.data.sha
+                    : undefined
             });
         });
     }
@@ -11149,17 +11153,22 @@ class Helper {
         const buff = Buffer.alloc(decoded.length, decoded);
         return buff.toString('base64');
     }
-    getFileAsync(nwo, filePath) {
+    _getFileContentAsync(nwo, filePath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this._getFileAsync(nwo, filePath);
+            return Helper._decode(result.data.content);
+        });
+    }
+    _getFileAsync(nwo, filePath) {
         return __awaiter(this, void 0, void 0, function* () {
             const repoData = Helper.getRepoData(nwo);
             console.log(`Fetching ${filePath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
             //https://developer.github.com/v3/repos/contents/#get-contents
-            const result = yield this._actionScopedGitHubClient.repos.getContents({
+            return yield this._actionScopedGitHubClient.repos.getContents({
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: filePath
             });
-            return Helper._decode(result.data.content);
         });
     }
     static getRepoData(nwo) {

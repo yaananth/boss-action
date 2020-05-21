@@ -1,5 +1,6 @@
 import * as path from 'path'
 import {Octokit} from '@octokit/rest'
+import {OctokitResponse, ReposGetContentsResponseData} from '@octokit/types'
 import {
   IRepoData,
   IWorkerJson,
@@ -20,7 +21,7 @@ export class Helper {
   async getWorkersAsync(nwo: string): Promise<IWorkerJson[]> {
     const workersJsonPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_JSON)
 
-    return JSON.parse(await this.getFileAsync(nwo, workersJsonPath))
+    return JSON.parse(await this._getFileContentAsync(nwo, workersJsonPath))
   }
 
   async getWorkerYml(data: IWorkflowYmlData): Promise<IWorkflowYmlResult> {
@@ -30,7 +31,7 @@ export class Helper {
       this.YML_EXT(data.worker)
     )
     const name = `BOSS_${data.worker}_${data.id}`
-    const content = await this.getFileAsync(data.nwo, workersYmlPath)
+    const content = await this._getFileContentAsync(data.nwo, workersYmlPath)
     return {
       name,
       content
@@ -48,13 +49,20 @@ export class Helper {
     console.log(
       `Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
+
+    const existingContent = await this._getFileAsync(nwo, workFlowPath)
+
     // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
     await this._privateScopedGitHubClient.repos.createOrUpdateFile({
       owner: repoData.owner,
       repo: repoData.repo,
       path: workFlowPath,
       content: Helper._encode(content),
-      message: this.BOSS_MESSAGE(command)
+      message: this.BOSS_MESSAGE(command),
+      sha:
+        existingContent && existingContent.data
+          ? existingContent.data.sha
+          : undefined
     })
   }
 
@@ -87,18 +95,28 @@ export class Helper {
     return buff.toString('base64')
   }
 
-  private async getFileAsync(nwo: string, filePath: string): Promise<string> {
+  private async _getFileContentAsync(
+    nwo: string,
+    filePath: string
+  ): Promise<string> {
+    const result = await this._getFileAsync(nwo, filePath)
+    return Helper._decode(result.data.content)
+  }
+
+  private async _getFileAsync(
+    nwo: string,
+    filePath: string
+  ): Promise<OctokitResponse<ReposGetContentsResponseData>> {
     const repoData = Helper.getRepoData(nwo)
     console.log(
       `Fetching ${filePath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
     //https://developer.github.com/v3/repos/contents/#get-contents
-    const result = await this._actionScopedGitHubClient.repos.getContents({
+    return await this._actionScopedGitHubClient.repos.getContents({
       owner: repoData.owner,
       repo: repoData.repo,
       path: filePath
     })
-    return Helper._decode(result.data.content)
   }
 
   private static getRepoData(nwo: string): IRepoData {
