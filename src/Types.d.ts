@@ -25,3 +25,13 @@ export interface IWorkflowYmlData {
   worker: string
   command: string
 }
+
+export interface IWorkflowYmlResult {
+  content: string
+  name: string
+}
+
+export interface IRepoData {
+  owner: string
+  repo: string
+}

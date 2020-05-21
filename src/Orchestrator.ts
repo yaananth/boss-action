@@ -11,13 +11,18 @@ export class Orchestrator {
     for (const workerObj of workersJson) {
       if (workerObj.command.toLowerCase() === this._data.command) {
         console.log(`Found worker ${workerObj.worker}!`)
-        console.log(
-          await this._data.helper.getWorkerYml({
-            id: this._id,
-            nwo: this._data.nwo,
-            worker: workerObj.worker,
-            command: this._data.command
-          })
+        const workFlowResult = await this._data.helper.getWorkerYml({
+          id: this._id,
+          nwo: this._data.nwo,
+          worker: workerObj.worker,
+          command: this._data.command
+        })
+        console.log(workFlowResult.content)
+        await this._data.helper.pushWorkflow(
+          this._data.nwo,
+          this._data.command,
+          workFlowResult.name,
+          workFlowResult.content
         )
       }
     }

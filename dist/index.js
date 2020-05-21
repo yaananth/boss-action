@@ -8715,10 +8715,12 @@ class Helper {
     constructor(actionToken, patToken) {
         this.BOSS_DIR = '.boss';
         this.BOSS_WORKERS_JSON = 'workers.json';
+        this.BOSS_MESSAGE = (command) => `boss response to ${command}`;
         this.BOSS_WORKERS_DIR = 'workers';
-        this.YML_EXT = '.yml';
-        this.YML_TEMPLATE = (command, id, content) => `
-name: BOSS_${command}_${id}
+        this.GHUB_WORKFLOW_DIR = path.join('.github', 'workflows');
+        this.YML_EXT = (name) => `${name}.yml`;
+        this.YML_TEMPLATE = (name, id, content) => `
+name: ${name}
 on: 
   repository_dispatch
     types: [${id}]
@@ -8742,8 +8744,28 @@ jobs:
     }
     getWorkerYml(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, `${data.worker}${this.YML_EXT}`);
-            return this.YML_TEMPLATE(data.command, data.id, yield this.getFileAsync(data.nwo, workersYmlPath));
+            const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, this.YML_EXT(data.worker));
+            const name = `BOSS_${data.command}_${data.id}`;
+            const content = this.YML_TEMPLATE(name, data.id, yield this.getFileAsync(data.nwo, workersYmlPath));
+            return {
+                name,
+                content
+            };
+        });
+    }
+    pushWorkflow(nwo, command, name, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const repoData = Helper.getRepoData(nwo);
+            const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
+            console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
+            //https://developer.github.com/v3/repos/contents/#create-or-update-a-file
+            yield this._actionScopedGitHubClient.repos.createOrUpdateFile({
+                owner: repoData.owner,
+                repo: repoData.repo,
+                path: workFlowPath,
+                content,
+                message: this.BOSS_MESSAGE(command)
+            });
         });
     }
     static _decode(encoded) {
@@ -8752,18 +8774,23 @@ jobs:
     }
     getFileAsync(nwo, filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const nwoData = nwo.split('/');
-            const owner = nwoData[0];
-            const repo = nwoData[1];
-            console.log(`Fetching ${filePath} for Owner: ${owner} Repo: ${repo}`);
+            const repoData = Helper.getRepoData(nwo);
+            console.log(`Fetching ${filePath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
             //https://developer.github.com/v3/repos/contents/#get-contents
             const result = yield this._actionScopedGitHubClient.repos.getContents({
-                owner,
-                repo,
+                owner: repoData.owner,
+                repo: repoData.repo,
                 path: filePath
             });
             return Helper._decode(result.data.content);
         });
+    }
+    static getRepoData(nwo) {
+        const nwoData = nwo.split('/');
+        return {
+            owner: nwoData[0],
+            repo: nwoData[1]
+        };
     }
 }
 exports.Helper = Helper;
@@ -22957,12 +22984,14 @@ class Orchestrator {
             for (const workerObj of workersJson) {
                 if (workerObj.command.toLowerCase() === this._data.command) {
                     console.log(`Found worker ${workerObj.worker}!`);
-                    console.log(yield this._data.helper.getWorkerYml({
+                    const workFlowResult = yield this._data.helper.getWorkerYml({
                         id: this._id,
                         nwo: this._data.nwo,
                         worker: workerObj.worker,
                         command: this._data.command
-                    }));
+                    });
+                    console.log(workFlowResult.content);
+                    yield this._data.helper.pushWorkflow(this._data.nwo, this._data.command, workFlowResult.name, workFlowResult.content);
                 }
             }
         });
