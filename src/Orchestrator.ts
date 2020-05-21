@@ -5,9 +5,6 @@ import {createHash} from 'crypto'
 export class Orchestrator {
   constructor(data: IOrchestratorData) {
     this._data = data
-    this._id = createHash('md5')
-      .update(this._data.command)
-      .digest('hex')
   }
 
   async runAsync(): Promise<void> {
@@ -34,6 +31,10 @@ export class Orchestrator {
           }
         }
         workerObjFound = true
+        this._id = createHash('md5')
+          .update(workerObj.command)
+          .digest('hex')
+
         console.log(`Found worker ${workerObj.worker} for command ${command}!`)
         const workFlowResult = await this._data.helper.getWorkerYml({
           id: this._id,
@@ -73,6 +74,6 @@ export class Orchestrator {
   }
 
   private _data: IOrchestratorData
-  private _id: string
+  private _id: string | undefined
   private _bossEnv = (i: number) => `boss_payload_${i}`
 }

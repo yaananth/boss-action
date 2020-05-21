@@ -4213,6 +4213,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const js_yaml_1 = __webpack_require__(186);
+const util_1 = __webpack_require__(669);
 class Yaml {
     constructor(data) {
         this._jobName = 'boss-at-work';
@@ -4241,9 +4242,9 @@ class Yaml {
         const template = this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id);
         core.debug(`Injecting template : ${template}`);
         const workflowJson = JSON.parse(template);
-        core.debug(`Workflow JSON waiting to be injected : ${workflowJson}`);
+        core.debug(`Workflow JSON waiting to be injected : ${util_1.inspect(workflowJson)}`);
         workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps;
-        core.debug(`Final Workflow JSON : ${workflowJson}`);
+        core.debug(`Final Workflow JSON : ${util_1.inspect(workflowJson)}`);
         return js_yaml_1.safeDump(workflowJson);
     }
 }
@@ -26449,9 +26450,6 @@ class Orchestrator {
     constructor(data) {
         this._bossEnv = (i) => `boss_payload_${i}`;
         this._data = data;
-        this._id = crypto_1.createHash('md5')
-            .update(this._data.command)
-            .digest('hex');
     }
     runAsync() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -26474,6 +26472,9 @@ class Orchestrator {
                         }
                     }
                     workerObjFound = true;
+                    this._id = crypto_1.createHash('md5')
+                        .update(workerObj.command)
+                        .digest('hex');
                     console.log(`Found worker ${workerObj.worker} for command ${command}!`);
                     const workFlowResult = yield this._data.helper.getWorkerYml({
                         id: this._id,

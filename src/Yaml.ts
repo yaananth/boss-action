@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import {JSON_SCHEMA, safeDump, safeLoad} from 'js-yaml'
 import {IJob, IWorkflow, IYamlData} from './Types'
+import {inspect} from 'util'
 
 export class Yaml {
   constructor(data: IYamlData) {
@@ -19,9 +20,11 @@ export class Yaml {
     )
     core.debug(`Injecting template : ${template}`)
     const workflowJson: IWorkflow = JSON.parse(template)
-    core.debug(`Workflow JSON waiting to be injected : ${workflowJson}`)
+    core.debug(
+      `Workflow JSON waiting to be injected : ${inspect(workflowJson)}`
+    )
     workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps
-    core.debug(`Final Workflow JSON : ${workflowJson}`)
+    core.debug(`Final Workflow JSON : ${inspect(workflowJson)}`)
     return safeDump(workflowJson)
   }
 
