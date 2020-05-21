@@ -9,17 +9,12 @@ export class Yaml {
     })
   }
 
-  transform(): void {
+  getTransformedContent(): string {
     const workflowJson: IWorkflow = JSON.parse(
       this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id)
     )
     workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps
-    console.log(workflowJson)
-
-    const workflow = safeDump(workflowJson)
-    console.log(workflow)
-
-    console.log(this._steps)
+    return safeDump(workflowJson)
   }
 
   private readonly _steps: IJob

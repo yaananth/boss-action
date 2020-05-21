@@ -1,5 +1,4 @@
 import * as path from 'path'
-import * as util from 'util'
 import {Octokit} from '@octokit/rest'
 import {
   IRepoData,
@@ -50,16 +49,32 @@ export class Helper {
       `Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
     // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
-    const result = await this._privateScopedGitHubClient.repos.createOrUpdateFile(
-      {
-        owner: repoData.owner,
-        repo: repoData.repo,
-        path: workFlowPath,
-        content: Helper._encode(content),
-        message: this.BOSS_MESSAGE(command)
-      }
+    await this._privateScopedGitHubClient.repos.createOrUpdateFile({
+      owner: repoData.owner,
+      repo: repoData.repo,
+      path: workFlowPath,
+      content: Helper._encode(content),
+      message: this.BOSS_MESSAGE(command)
+    })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async triggerDispatch(nwo: string, id: string, payload?: any): Promise<void> {
+    // https://developer.github.com/v3/repos/#create-a-repository-dispatch-event
+    const repoData = Helper.getRepoData(nwo)
+    console.log(
+      `Trigger dispatch event with event_type ${id} and payload ${JSON.stringify(
+        payload || ''
+      )}!`
     )
-    console.log(util.inspect(result, false, null, true))
+    this._privateScopedGitHubClient.repos.createDispatchEvent({
+      owner: repoData.owner,
+      repo: repoData.repo,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      event_type: id,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      client_payload: payload
+    })
   }
 
   private static _decode(encoded: string): string {

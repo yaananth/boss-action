@@ -24,14 +24,16 @@ export class Orchestrator {
           name: workFlowResult.name,
           content: workFlowResult.content
         })
-        yaml.transform()
+        const yamlContent = yaml.getTransformedContent()
 
-        // await this._data.helper.pushWorkflow(
-        //   this._data.nwo,
-        //   this._data.command,
-        //   workFlowResult.name,
-        //   workFlowResult.content
-        // )
+        await this._data.helper.pushWorkflow(
+          this._data.nwo,
+          this._data.command,
+          workFlowResult.name,
+          yamlContent
+        )
+
+        await this._data.helper.triggerDispatch(this._data.nwo, this._id)
       }
     }
   }
