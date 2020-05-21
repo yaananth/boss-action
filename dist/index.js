@@ -26723,14 +26723,30 @@ const Yaml_1 = __webpack_require__(179);
 class Orchestrator {
     constructor(data) {
         this._id = uuid_1.v4();
+        this._bossEnv = (i) => `boss_payload_${i}`;
         this._data = data;
     }
     runAsync() {
         return __awaiter(this, void 0, void 0, function* () {
             const workersJson = yield this._data.helper.getWorkersAsync(this._data.nwo);
+            let workerObjFound = false;
             for (const workerObj of workersJson) {
-                if (workerObj.command.toLowerCase() === this._data.command) {
-                    console.log(`Found worker ${workerObj.worker}!`);
+                const regEx = new RegExp(workerObj.command, 'igm');
+                const regExResult = regEx.exec(workerObj.command) || [];
+                if (regExResult.length >= 1) {
+                    const command = regExResult[0];
+                    const params = regExResult.slice(1) || [];
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    let payload;
+                    let counter = 0;
+                    if (params.length > 0) {
+                        payload = payload || {};
+                        for (const p of params) {
+                            payload[this._bossEnv(counter++)] = p;
+                        }
+                    }
+                    workerObjFound = true;
+                    console.log(`Found worker ${workerObj.worker} for command ${command}!`);
                     const workFlowResult = yield this._data.helper.getWorkerYml({
                         id: this._id,
                         nwo: this._data.nwo,
@@ -26744,8 +26760,12 @@ class Orchestrator {
                     });
                     const yamlContent = yaml.getTransformedContent();
                     yield this._data.helper.pushWorkflow(this._data.nwo, this._data.command, workFlowResult.name, yamlContent);
-                    yield this._data.helper.triggerDispatch(this._data.nwo, this._id);
+                    yield this._data.helper.triggerDispatch(this._data.nwo, this._id, payload);
+                    break;
                 }
+            }
+            if (!workerObjFound) {
+                console.log(`No worker found for command ${this._data.command}, check workers.json`);
             }
         });
     }
