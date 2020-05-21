@@ -26475,7 +26475,7 @@ class Orchestrator {
             for (const workerObj of workersJson) {
                 const regEx = new RegExp(workerObj.command, 'igm');
                 const regExResult = regEx.exec(this._data.command) || [];
-                console.log(`Regular expression check for ${workerObj.command}: `, regExResult);
+                console.log(`Regular expression check for comment ${this._data.command} with ${workerObj.command}: `, regExResult);
                 if (regExResult.length >= 1) {
                     const command = regExResult[0];
                     const params = regExResult.slice(2) || [];
