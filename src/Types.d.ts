@@ -1,10 +1,15 @@
 import {Helper} from './Helper'
 
-export interface IIssuePayload {
-  comment: IIssueComment
+// https://developer.github.com/webhooks/event-payloads/#issue_comment or https://developer.github.com/webhooks/event-payloads/#pull_request_review_comment
+export interface IEventPayload {
+  comment: IEventComment
 }
 
-export interface IIssueComment {
+export interface IPRPayload {
+  comment: IEventComment
+}
+
+export interface IEventComment {
   body: string
 }
 

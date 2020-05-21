@@ -1,14 +1,14 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
 
-import {IIssuePayload} from './Types'
+import {IEventPayload} from './Types'
 import {Helper} from './Helper'
 import {Orchestrator} from './Orchestrator'
 
 async function run(): Promise<void> {
   try {
     const slashCommand = `/${core.getInput('slash')}`
-    const comment: string = (context.payload as IIssuePayload).comment.body
+    const comment: string = (context.payload as IEventPayload).comment.body
     if (!comment.startsWith(slashCommand)) {
       console.log(
         `Note: Boss is configured to run with slash command "${slashCommand}"`
