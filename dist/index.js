@@ -3724,6 +3724,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const github_1 = __webpack_require__(469);
 const Helper_1 = __webpack_require__(552);
+const Orchestrator_1 = __webpack_require__(799);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -3737,7 +3738,12 @@ function run() {
             const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
             const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
             const helper = new Helper_1.Helper(GITHUB_TOKEN, '');
-            console.log(yield helper.getWorkersAsync(GITHUB_REPOSITORY));
+            const orchestrator = new Orchestrator_1.Orchestrator({
+                helper,
+                command: comment.replace(slashCommand, '').trim(),
+                nwo: GITHUB_REPOSITORY
+            });
+            yield orchestrator.runAsync();
         }
         catch (error) {
             core.setFailed(error.message);
@@ -8475,22 +8481,33 @@ class Helper {
     getWorkersAsync(nwo) {
         return __awaiter(this, void 0, void 0, function* () {
             const workersJsonPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_JSON);
-            const nwoData = nwo.split('/');
-            const owner = nwoData[0];
-            const repo = nwoData[1];
-            console.log(`Fetching ${workersJsonPath} for Owner: ${owner} Repo: ${repo}`);
-            //https://developer.github.com/v3/repos/contents/#get-contents
-            const jsonResult = yield this._actionScopedGitHubClient.repos.getContents({
-                owner,
-                repo,
-                path: workersJsonPath
-            });
-            return JSON.parse(Helper._decode(jsonResult.data.content));
+            return JSON.parse(yield this.getFileAsync(nwo, workersJsonPath));
+        });
+    }
+    getWorkerYml(nwo, worker) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, worker, this.YML_EXT);
+            return JSON.parse(yield this.getFileAsync(nwo, workersYmlPath));
         });
     }
     static _decode(encoded) {
         const buff = Buffer.from(encoded, 'base64');
         return buff.toString('utf-8');
+    }
+    getFileAsync(nwo, filePath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const nwoData = nwo.split('/');
+            const owner = nwoData[0];
+            const repo = nwoData[1];
+            console.log(`Fetching ${path} for Owner: ${owner} Repo: ${repo}`);
+            //https://developer.github.com/v3/repos/contents/#get-contents
+            const result = yield this._actionScopedGitHubClient.repos.getContents({
+                owner,
+                repo,
+                path: filePath
+            });
+            return Helper._decode(result.data.content);
+        });
     }
 }
 exports.Helper = Helper;
@@ -22604,6 +22621,42 @@ function getUserAgent() {
 
 exports.getUserAgent = getUserAgent;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 799:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+class Orchestrator {
+    constructor(data) {
+        this._data = data;
+    }
+    runAsync() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const workersJson = yield this._data.helper.getWorkersAsync(this._data.nwo);
+            for (const workerObj of workersJson) {
+                if (workerObj.command.toLowerCase() === this._data.command) {
+                    console.log(`Found worker ${workerObj.worker}!`);
+                    console.log(yield this._data.helper.getWorkerYml(this._data.nwo, workerObj.worker));
+                }
+            }
+        });
+    }
+}
+exports.Orchestrator = Orchestrator;
 
 
 /***/ }),

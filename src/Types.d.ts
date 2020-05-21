@@ -1,9 +1,17 @@
+import {Helper} from './Helper'
+
 export interface IIssuePayload {
   comment: IIssueComment
 }
 
 export interface IIssueComment {
   body: string
+}
+
+export interface IOrchestratorData {
+  helper: Helper
+  nwo: string
+  command: string
 }
 
 export interface IWorkerJson {

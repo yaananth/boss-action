@@ -3,6 +3,7 @@ import {context} from '@actions/github'
 
 import {IIssuePayload} from './Types'
 import {Helper} from './Helper'
+import {Orchestrator} from './Orchestrator'
 
 async function run(): Promise<void> {
   try {
@@ -20,7 +21,12 @@ async function run(): Promise<void> {
     const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY as string
 
     const helper = new Helper(GITHUB_TOKEN, '')
-    console.log(await helper.getWorkersAsync(GITHUB_REPOSITORY))
+    const orchestrator = new Orchestrator({
+      helper,
+      command: comment.replace(slashCommand, '').trim(),
+      nwo: GITHUB_REPOSITORY
+    })
+    await orchestrator.runAsync()
   } catch (error) {
     core.setFailed(error.message)
   }
