@@ -3509,8 +3509,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = __importStar(__webpack_require__(622));
 const core = __importStar(__webpack_require__(470));
 const github_1 = __webpack_require__(469);
+const Constants_1 = __webpack_require__(559);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -3521,6 +3523,9 @@ function run() {
                 console.log(`Note: Boss is configured to run with slash command "${slashcommand}"`);
                 return;
             }
+            const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
+            const srcPath = path.join(GITHUB_WORKSPACE, Constants_1.Constants.BOSS_DIR);
+            console.log(`Source path is ${srcPath}`);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -8189,6 +8194,20 @@ function hasPreviousPage (link) {
   deprecate(`octokit.hasPreviousPage() – You can use octokit.paginate or async iterators instead: https://github.com/octokit/rest.js#pagination.`)
   return getPageLinks(link).prev
 }
+
+
+/***/ }),
+
+/***/ 559:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class Constants {
+}
+exports.Constants = Constants;
+Constants.BOSS_DIR = '.boss';
 
 
 /***/ }),
