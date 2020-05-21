@@ -1,0 +1,16 @@
+name: BOSS_reaction_19c15ae13847e2eb218edf599d114ac1
+'on':
+  repository_dispatch:
+    types:
+      - 19c15ae13847e2eb218edf599d114ac1
+jobs:
+  boss-at-work:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post actions status to slack
+        run: >
+          curl -H 'Accept: application/vnd.github.squirrel-girl-preview+json' -H
+          "Authorization: token ${{ secrets.BOSS_TOKEN }}" -d '{"content":"${{
+          github.event.client_payload.boss_payload_1 }}"}' -X POST
+          https://api.github.com/repos/yaananth/boss-action/issues/comments/${{
+          github.event.client_payload.commentId }}/reactions
