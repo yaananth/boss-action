@@ -1,0 +1,16 @@
+
+name: BOSS_hello_f12bc71b-40f1-4392-86f8-c9096d07cc1f
+on: 
+  repository_dispatch:
+    types: [f12bc71b-40f1-4392-86f8-c9096d07cc1f]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+  uses: actions/checkout@v2
+- name: Hello
+  run: |
+    echo hey boss!
+
+  
