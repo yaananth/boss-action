@@ -11078,6 +11078,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(__webpack_require__(622));
 const rest_1 = __webpack_require__(889);
+const core = __importStar(__webpack_require__(470));
+const util_1 = __webpack_require__(669);
 class Helper {
     constructor(actionToken, patToken) {
         this.BOSS_DIR = '.boss';
@@ -11115,7 +11117,13 @@ class Helper {
             const repoData = Helper.getRepoData(nwo);
             const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
             console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
-            const existingContent = yield this._getFileAsync(nwo, workFlowPath);
+            let existingContent = null;
+            try {
+                existingContent = yield this._getFileAsync(nwo, workFlowPath);
+            }
+            catch (e) {
+                core.debug(util_1.inspect(e));
+            }
             // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
             yield this._privateScopedGitHubClient.repos.createOrUpdateFile({
                 owner: repoData.owner,

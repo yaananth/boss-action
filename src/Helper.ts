@@ -7,6 +7,8 @@ import {
   IWorkflowYmlData,
   IWorkflowYmlResult
 } from './Types'
+import * as core from '@actions/core'
+import {inspect} from 'util'
 
 export class Helper {
   constructor(actionToken: string, patToken: string) {
@@ -50,7 +52,14 @@ export class Helper {
       `Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`
     )
 
-    const existingContent = await this._getFileAsync(nwo, workFlowPath)
+    let existingContent: OctokitResponse<
+      ReposGetContentsResponseData
+    > | null = null
+    try {
+      existingContent = await this._getFileAsync(nwo, workFlowPath)
+    } catch (e) {
+      core.debug(inspect(e))
+    }
 
     // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
     await this._privateScopedGitHubClient.repos.createOrUpdateFile({
