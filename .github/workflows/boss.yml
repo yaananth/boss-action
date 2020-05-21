@@ -8,6 +8,8 @@ jobs:
       uses: actions/checkout@v2
     - name: RunBoss
       uses: ./
+      with:
+        slash: "boss"
       env:
         BOSS_TOKEN: "${{ secrets.BOSS_TOKEN }}"
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
