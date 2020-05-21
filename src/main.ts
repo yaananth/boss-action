@@ -8,7 +8,7 @@ async function run(): Promise<void> {
     core.setOutput('slashcommand', slashcommand)
     const comment: string = (context.payload as IIssuePayload).comment.body
     if (!comment.startsWith(slashcommand)) {
-      console.log(
+      core.setFailed(
         `Note: Boss is configured to run with slash command "${slashcommand}"`
       )
       return
