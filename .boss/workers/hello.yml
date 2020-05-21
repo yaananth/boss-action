@@ -3,4 +3,4 @@ steps:
   uses: actions/checkout@v2
 - name: Hello
   run: |
-    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}"!
+    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!
