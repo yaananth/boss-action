@@ -1,4 +1,4 @@
-name: 'Boss'
+name: 'Boss slash command orchestrator'
 description: 'The boss which can run other actions'
 author: 'yaananth'
 inputs:
