@@ -1,6 +1,6 @@
 [
 {
-  "command": "hello",
+  "command": "(hello)([\w+ ]+)",
   "worker": "hello"
 }
 ]
