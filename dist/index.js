@@ -4203,7 +4203,15 @@ module.exports = opts => {
 
 "use strict";
 
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
 const js_yaml_1 = __webpack_require__(186);
 class Yaml {
     constructor(data) {
@@ -4224,13 +4232,18 @@ class Yaml {
 }
   `;
         this._data = data;
+        core.debug(`Loading data : ${data.content}`);
         this._steps = js_yaml_1.safeLoad(data.content, {
             schema: js_yaml_1.JSON_SCHEMA
         });
     }
     getTransformedContent() {
-        const workflowJson = JSON.parse(this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id));
+        const template = this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id);
+        core.debug(`Injecting template : ${template}`);
+        const workflowJson = JSON.parse(template);
+        core.debug(`Workflow JSON waiting to be injected : ${workflowJson}`);
         workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps;
+        core.debug(`Final Workflow JSON : ${workflowJson}`);
         return js_yaml_1.safeDump(workflowJson);
     }
 }
