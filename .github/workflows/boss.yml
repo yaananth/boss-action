@@ -1,15 +1,1 @@
-on: [issue_comment, pull_request_review_comment]
-
-jobs:
-  boss:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: RunBoss
-      uses: ./
-      with:
-        slash: "boss"
-      env:
-        BOSS_TOKEN: "${{ secrets.BOSS_TOKEN }}"
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+bad
