@@ -61,7 +61,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: RunBoss
-      uses: ./
+      uses: yaananth/boss-action@v1
       env:
         BOSS_TOKEN: "${{ secrets.BOSS_TOKEN }}"
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -78,7 +78,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: RunBoss
-      uses: ./
+      uses: yaananth/boss-action@v1
       with:
         slash: "bossmate"
       env:
