@@ -41,3 +41,27 @@ export interface IYamlData {
   name: string
   id: string
 }
+
+export interface IStep {
+  id?: string
+  name?: string
+}
+
+export interface IJob {
+  name?: string
+  'runs-on': string | string[]
+  steps: IStep[]
+}
+
+export interface IJobMap {
+  [jobId: string]: IJob
+}
+
+export interface IWorkflow {
+  name?: string
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on: any
+
+  jobs: IJobMap
+}

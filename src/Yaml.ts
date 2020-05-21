@@ -1,5 +1,5 @@
 import {JSON_SCHEMA, safeDump, safeLoad} from 'js-yaml'
-import {IYamlData} from './Types'
+import {IJob, IWorkflow, IYamlData} from './Types'
 
 export class Yaml {
   constructor(data: IYamlData) {
@@ -10,13 +10,18 @@ export class Yaml {
   }
 
   transform(): void {
-    console.log(safeDump(this.YML_TEMPLATE(this._data.name, this._data.id)))
+    const workflowJson: IWorkflow = JSON.parse(
+      this.JSON_TEMPLATE(this._data.name, this._data.id)
+    )
+    const workflow = safeDump(workflowJson)
     console.log(this._steps)
+    console.log(workflowJson)
+    console.log(workflow)
   }
 
-  private readonly _steps: string
+  private readonly _steps: IJob
   private readonly _data: IYamlData
-  private YML_TEMPLATE = (name: string, id: string) => `
+  private JSON_TEMPLATE = (name: string, id: string) => `
 {
   name: "${name}"
   on: {
@@ -25,7 +30,7 @@ export class Yaml {
     }
   }
   jobs: {
-    build: {
+    boss-at-work: {
       runs-on: "ubuntu-latest"
     }      
   }
