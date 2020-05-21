@@ -3,11 +3,11 @@ steps:
   uses: actions/checkout@v2
 - name: Hello
   run: |
-    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!
+    echo hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!  for comment with Id ${{ github.event.client_payload.commentId }}
 - name: Update issue comment
-  uses: simpleactions/create-issue-comment@v1.0.0
+  uses: ./
   with:
-    body: "hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!"
+    body: "hey boss, I got ${{ github.event.client_payload.boss_payload_0 }}!  for comment with Id ${{ github.event.client_payload.commentId }}"
     issue_number: 1
     github_token: "${{ secrets.GITHUB_TOKEN }}"
 
