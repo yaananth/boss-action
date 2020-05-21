@@ -109,11 +109,12 @@ export class Helper {
   private YML_TEMPLATE = (name: string, id: string, content: string) => `
 name: ${name}
 on: 
-  repository_dispatch
+  repository_dispatch:
     types: [${id}]
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
     ${content}
   `
 }

@@ -8724,11 +8724,12 @@ class Helper {
         this.YML_TEMPLATE = (name, id, content) => `
 name: ${name}
 on: 
-  repository_dispatch
+  repository_dispatch:
     types: [${id}]
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
     ${content}
   `;
         this._actionScopedGitHubClient = new rest_1.Octokit({
