@@ -4249,18 +4249,13 @@ module.exports = opts => {
 
 "use strict";
 
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const JsYaml = __importStar(__webpack_require__(186));
+const js_yaml_1 = __webpack_require__(186);
 class Yaml {
     constructor(content) {
-        this._data = JsYaml.safeLoad(content);
+        this._data = js_yaml_1.safeLoad(content, {
+            schema: js_yaml_1.JSON_SCHEMA
+        });
     }
     transform() {
         console.log(this._data);

@@ -1,8 +1,10 @@
-import * as JsYaml from 'js-yaml'
+import {JSON_SCHEMA, safeLoad} from 'js-yaml'
 
 export class Yaml {
   constructor(content: string) {
-    this._data = JsYaml.safeLoad(content)
+    this._data = safeLoad(content, {
+      schema: JSON_SCHEMA
+    })
   }
 
   transform(): void {
