@@ -6,7 +6,7 @@ Run any action as you please using custom slash commands and by sending payloads
 
 ### workers.json
 
-> This file has to be at `.boss/workers.json`
+> This file has to be at `.boss/workers.json` [sample](https://github.com/yaananth/boss-action/tree/master/.boss/workers.json)
 
 Sample:
 ```
@@ -22,6 +22,8 @@ Sample:
 - `worker`: Should point to worker file name (with out `.yml`) in `.boss/workers`
 
 ### workers yml
+
+> Note: These have to be at `.boss/workers/` [sample](https://github.com/yaananth/boss-action/tree/master/.boss/workers.json)
 
 Just github action yml but only the [`steps` part](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idsteps)
 
