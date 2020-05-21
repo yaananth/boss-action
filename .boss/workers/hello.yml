@@ -1,0 +1,6 @@
+steps:
+  - name: Checkout
+    uses: actions/checkout@v2
+  - name: Hello
+    run: |
+      echo hey boss!
