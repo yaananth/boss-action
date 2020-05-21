@@ -19,8 +19,11 @@ export class Orchestrator {
           command: this._data.command
         })
 
-        console.log(`Data:${workFlowResult.content}`)
-        const yaml = new Yaml(workFlowResult.content)
+        const yaml = new Yaml({
+          id: this._id,
+          name: workFlowResult.name,
+          content: workFlowResult.content
+        })
         yaml.transform()
 
         // await this._data.helper.pushWorkflow(

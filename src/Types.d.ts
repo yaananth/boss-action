@@ -35,3 +35,9 @@ export interface IRepoData {
   owner: string
   repo: string
 }
+
+export interface IYamlData {
+  content: string
+  name: string
+  id: string
+}

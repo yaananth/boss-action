@@ -4252,24 +4252,30 @@ module.exports = opts => {
 Object.defineProperty(exports, "__esModule", { value: true });
 const js_yaml_1 = __webpack_require__(186);
 class Yaml {
-    constructor(content) {
-        this.YML_TEMPLATE = (name, id, content) => `
-name: ${name}
-on: 
-  repository_dispatch:
-    types: [${id}]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    ${content}
+    constructor(data) {
+        this.YML_TEMPLATE = (name, id) => `
+{
+  name: "${name}"
+  on: {
+    repository_dispatch: {
+      types: ["${id}"]
+    }
+  }
+  jobs: {
+    build: {
+      runs-on: "ubuntu-latest"
+    }      
+  }
+}
   `;
-        this._data = js_yaml_1.safeLoad(content, {
+        this._data = data;
+        this._steps = js_yaml_1.safeLoad(data.content, {
             schema: js_yaml_1.JSON_SCHEMA
         });
     }
     transform() {
-        console.log(this._data);
+        console.log(js_yaml_1.safeDump(this.YML_TEMPLATE(this._data.name, this._data.id)));
+        console.log(this._steps);
     }
 }
 exports.Yaml = Yaml;
@@ -26715,8 +26721,11 @@ class Orchestrator {
                         worker: workerObj.worker,
                         command: this._data.command
                     });
-                    console.log(`Data:${workFlowResult.content}`);
-                    const yaml = new Yaml_1.Yaml(workFlowResult.content);
+                    const yaml = new Yaml_1.Yaml({
+                        id: this._id,
+                        name: workFlowResult.name,
+                        content: workFlowResult.content
+                    });
                     yaml.transform();
                     // await this._data.helper.pushWorkflow(
                     //   this._data.nwo,

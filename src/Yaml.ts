@@ -1,26 +1,34 @@
-import {JSON_SCHEMA, safeLoad} from 'js-yaml'
+import {JSON_SCHEMA, safeDump, safeLoad} from 'js-yaml'
+import {IYamlData} from './Types'
 
 export class Yaml {
-  constructor(content: string) {
-    this._data = safeLoad(content, {
+  constructor(data: IYamlData) {
+    this._data = data
+    this._steps = safeLoad(data.content, {
       schema: JSON_SCHEMA
     })
   }
 
   transform(): void {
-    console.log(this._data)
+    console.log(safeDump(this.YML_TEMPLATE(this._data.name, this._data.id)))
+    console.log(this._steps)
   }
 
-  private readonly _data: string
-  private YML_TEMPLATE = (name: string, id: string, content: string) => `
-name: ${name}
-on: 
-  repository_dispatch:
-    types: [${id}]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    ${content}
+  private readonly _steps: string
+  private readonly _data: IYamlData
+  private YML_TEMPLATE = (name: string, id: string) => `
+{
+  name: "${name}"
+  on: {
+    repository_dispatch: {
+      types: ["${id}"]
+    }
+  }
+  jobs: {
+    build: {
+      runs-on: "ubuntu-latest"
+    }      
+  }
+}
   `
 }
