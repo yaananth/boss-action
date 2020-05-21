@@ -1,5 +1,6 @@
 import {IOrchestratorData} from './Types'
 import {v4 as uuidv4} from 'uuid'
+import {Yaml} from './Yaml'
 
 export class Orchestrator {
   constructor(data: IOrchestratorData) {
@@ -17,6 +18,10 @@ export class Orchestrator {
           worker: workerObj.worker,
           command: this._data.command
         })
+
+        const yaml = new Yaml(workFlowResult.content)
+        yaml.transform()
+
         console.log(workFlowResult.content)
         await this._data.helper.pushWorkflow(
           this._data.nwo,
