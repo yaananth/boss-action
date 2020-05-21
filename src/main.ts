@@ -8,7 +8,8 @@ import {Orchestrator} from './Orchestrator'
 async function run(): Promise<void> {
   try {
     const slashCommand = `/${core.getInput('slash')}`
-    const comment: string = (context.payload as IEventPayload).comment.body
+    const eventPayload = context.payload as IEventPayload
+    const comment: string = eventPayload.comment.body
     if (!comment.startsWith(slashCommand)) {
       console.log(
         `Note: Boss is configured to run with slash command "${slashCommand}"`
@@ -25,7 +26,10 @@ async function run(): Promise<void> {
     const orchestrator = new Orchestrator({
       helper,
       command: comment.replace(slashCommand, '').trim(),
-      nwo: GITHUB_REPOSITORY
+      nwo: GITHUB_REPOSITORY,
+      additionalPayload: {
+        commentId: eventPayload.comment.id
+      }
     })
     await orchestrator.runAsync()
   } catch (error) {

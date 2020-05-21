@@ -1,4 +1,4 @@
-import {IOrchestratorData} from './Types'
+import {IAdditionalPayload, IOrchestratorData} from './Types'
 import {Yaml} from './Yaml'
 import {createHash} from 'crypto'
 
@@ -21,8 +21,9 @@ export class Orchestrator {
         const command = regExResult[0]
         const params = regExResult.slice(2) || []
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let payload: any
+        let payload: IAdditionalPayload = {
+          commentId: this._data.additionalPayload.commentId
+        }
         let counter = 0
         if (params.length > 0) {
           payload = payload || {}

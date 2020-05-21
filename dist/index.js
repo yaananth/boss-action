@@ -4398,7 +4398,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const slashCommand = `/${core.getInput('slash')}`;
-            const comment = github_1.context.payload.comment.body;
+            const eventPayload = github_1.context.payload;
+            const comment = eventPayload.comment.body;
             if (!comment.startsWith(slashCommand)) {
                 console.log(`Note: Boss is configured to run with slash command "${slashCommand}"`);
                 return;
@@ -4411,7 +4412,10 @@ function run() {
             const orchestrator = new Orchestrator_1.Orchestrator({
                 helper,
                 command: comment.replace(slashCommand, '').trim(),
-                nwo: GITHUB_REPOSITORY
+                nwo: GITHUB_REPOSITORY,
+                additionalPayload: {
+                    commentId: eventPayload.comment.id
+                }
             });
             yield orchestrator.runAsync();
         }
@@ -26479,8 +26483,9 @@ class Orchestrator {
                 if (regExResult.length >= 1) {
                     const command = regExResult[0];
                     const params = regExResult.slice(2) || [];
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    let payload;
+                    let payload = {
+                        commentId: this._data.additionalPayload.commentId
+                    };
                     let counter = 0;
                     if (params.length > 0) {
                         payload = payload || {};

@@ -5,11 +5,13 @@ export interface IEventPayload {
   comment: IEventComment
 }
 
-export interface IPRPayload {
-  comment: IEventComment
+export interface IAdditionalPayload {
+  commentId: string
+  [key: string]: string
 }
 
 export interface IEventComment {
+  id: string
   body: string
 }
 
@@ -17,6 +19,7 @@ export interface IOrchestratorData {
   helper: Helper
   nwo: string
   command: string
+  additionalPayload: IAdditionalPayload
 }
 
 export interface IWorkerJson {
