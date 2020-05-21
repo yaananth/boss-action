@@ -8499,7 +8499,7 @@ class Helper {
             const nwoData = nwo.split('/');
             const owner = nwoData[0];
             const repo = nwoData[1];
-            console.log(`Fetching ${path} for Owner: ${owner} Repo: ${repo}`);
+            console.log(`Fetching ${filePath} for Owner: ${owner} Repo: ${repo}`);
             //https://developer.github.com/v3/repos/contents/#get-contents
             const result = yield this._actionScopedGitHubClient.repos.getContents({
                 owner,
