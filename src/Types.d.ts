@@ -5,3 +5,10 @@ export interface IIssuePayload {
 export interface IIssueComment {
   body: string
 }
+
+interface IRunnerContext {
+  os: string
+  tool_cache: string
+  temp: string
+  workspace: string
+}
