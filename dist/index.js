@@ -8758,13 +8758,17 @@ jobs:
             const repoData = Helper.getRepoData(nwo);
             const workFlowPath = path.join(this.GHUB_WORKFLOW_DIR, this.YML_EXT(name));
             console.log(`Pushing ${workFlowPath} for Owner: ${repoData.owner} Repo: ${repoData.repo}`);
-            //https://developer.github.com/v3/repos/contents/#create-or-update-a-file
+            // https://developer.github.com/v3/repos/contents/#create-or-update-a-file
             yield this._actionScopedGitHubClient.repos.createOrUpdateFile({
                 owner: repoData.owner,
                 repo: repoData.repo,
                 path: workFlowPath,
                 content,
-                message: this.BOSS_MESSAGE(command)
+                message: this.BOSS_MESSAGE(command),
+                committer: {
+                    name: 'The Boss',
+                    email: 'yaananth@github.com'
+                }
             });
         });
     }
