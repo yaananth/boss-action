@@ -8487,7 +8487,7 @@ class Helper {
     getWorkerYml(nwo, worker) {
         return __awaiter(this, void 0, void 0, function* () {
             const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, `${worker}${this.YML_EXT}`);
-            return JSON.parse(yield this.getFileAsync(nwo, workersYmlPath));
+            return yield this.getFileAsync(nwo, workersYmlPath);
         });
     }
     static _decode(encoded) {

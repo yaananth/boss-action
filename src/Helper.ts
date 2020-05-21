@@ -24,7 +24,7 @@ export class Helper {
       this.BOSS_WORKERS_DIR,
       `${worker}${this.YML_EXT}`
     )
-    return JSON.parse(await this.getFileAsync(nwo, workersYmlPath))
+    return await this.getFileAsync(nwo, workersYmlPath)
   }
 
   private static _decode(encoded: string): string {
