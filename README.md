@@ -1,4 +1,6 @@
 # The boss
+Run any action as you please using custom slash commands and by sending payloads!
+
 
 ## Usage
 
