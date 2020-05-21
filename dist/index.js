@@ -4253,7 +4253,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const js_yaml_1 = __webpack_require__(186);
 class Yaml {
     constructor(data) {
-        this.JSON_TEMPLATE = (name, id) => `
+        this._jobName = 'boss-at-work';
+        this.JSON_TEMPLATE = (jobName, name, id) => `
 {
   "name": "${name}",
   "on": {
@@ -4262,7 +4263,7 @@ class Yaml {
     }
   },
   "jobs": {
-    "boss-at-work": {
+    "${jobName}": {
       "runs-on": "ubuntu-latest"
     }      
   }
@@ -4274,12 +4275,12 @@ class Yaml {
         });
     }
     transform() {
-        console.log(this.JSON_TEMPLATE(this._data.name, this._data.id));
-        const workflowJson = JSON.parse(this.JSON_TEMPLATE(this._data.name, this._data.id));
-        const workflow = js_yaml_1.safeDump(workflowJson);
-        console.log(this._steps);
+        const workflowJson = JSON.parse(this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id));
+        workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps;
         console.log(workflowJson);
+        const workflow = js_yaml_1.safeDump(workflowJson);
         console.log(workflow);
+        console.log(this._steps);
     }
 }
 exports.Yaml = Yaml;

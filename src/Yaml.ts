@@ -10,19 +10,22 @@ export class Yaml {
   }
 
   transform(): void {
-    console.log(this.JSON_TEMPLATE(this._data.name, this._data.id))
     const workflowJson: IWorkflow = JSON.parse(
-      this.JSON_TEMPLATE(this._data.name, this._data.id)
+      this.JSON_TEMPLATE(this._jobName, this._data.name, this._data.id)
     )
-    const workflow = safeDump(workflowJson)
-    console.log(this._steps)
+    workflowJson['jobs'][this._jobName]['steps'] = this._steps.steps
     console.log(workflowJson)
+
+    const workflow = safeDump(workflowJson)
     console.log(workflow)
+
+    console.log(this._steps)
   }
 
   private readonly _steps: IJob
   private readonly _data: IYamlData
-  private JSON_TEMPLATE = (name: string, id: string) => `
+  private readonly _jobName = 'boss-at-work'
+  private JSON_TEMPLATE = (jobName: string, name: string, id: string) => `
 {
   "name": "${name}",
   "on": {
@@ -31,7 +34,7 @@ export class Yaml {
     }
   },
   "jobs": {
-    "boss-at-work": {
+    "${jobName}": {
       "runs-on": "ubuntu-latest"
     }      
   }
