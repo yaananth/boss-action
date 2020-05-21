@@ -3516,10 +3516,9 @@ function run() {
         try {
             const slashcommand = `/${core.getInput('slash')}`;
             core.setOutput('slashcommand', slashcommand);
-            console.log(`Slash command is ${slashcommand}`);
             const comment = github_1.context.payload.comment.body;
             if (!comment.startsWith(slashcommand)) {
-                core.setFailed(`Note: Boss is configured to run with slash command "${slashcommand}"`);
+                console.log(`Note: Boss is configured to run with slash command "${slashcommand}"`);
                 return;
             }
         }
