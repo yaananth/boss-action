@@ -1,8 +1,8 @@
 name: 'Boss slash command orchestrator'
-description: 'The boss which can run other actions'
+description: 'The boss slash orchestrator which can run other actions. Create slash commands on the fly and custom payloads as you please with regular expressions. Power of slash commands chatops at github!'
 author: 'yaananth'
 inputs:
-  slash:              # change this
+  slash:
     description: 'slash command to active boss'
     default: 'boss'
 runs:
