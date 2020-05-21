@@ -1,6 +1,6 @@
 import * as path from 'path'
 import {Octokit} from '@octokit/rest'
-import {IWorkerJson} from './Types'
+import {IWorkerJson, IWorkflowYmlData} from './Types'
 
 export class Helper {
   constructor(actionToken: string, patToken: string) {
@@ -18,13 +18,17 @@ export class Helper {
     return JSON.parse(await this.getFileAsync(nwo, workersJsonPath))
   }
 
-  async getWorkerYml(nwo: string, worker: string): Promise<string> {
+  async getWorkerYml(data: IWorkflowYmlData): Promise<string> {
     const workersYmlPath = path.join(
       this.BOSS_DIR,
       this.BOSS_WORKERS_DIR,
-      `${worker}${this.YML_EXT}`
+      `${data.worker}${this.YML_EXT}`
     )
-    return await this.getFileAsync(nwo, workersYmlPath)
+    return this.YML_TEMPLATE(
+      data.command,
+      data.id,
+      await this.getFileAsync(data.nwo, workersYmlPath)
+    )
   }
 
   private static _decode(encoded: string): string {
@@ -52,4 +56,14 @@ export class Helper {
   private YML_EXT = '.yml'
   private _actionScopedGitHubClient: Octokit
   private _privateScopedGitHubClient: Octokit
+  private YML_TEMPLATE = (command: string, id: string, content: string) => `
+name: BOSS_${command}_${id}
+on: 
+  repository_dispatch
+    types: [${id}]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    ${content}
+  `
 }

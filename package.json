@@ -28,11 +28,13 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/github": "^2.2.0",
-    "@octokit/rest": "^17.9.2"
+    "@octokit/rest": "^17.9.2",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "@types/node": "^12.7.12",
+    "@types/uuid": "^8.0.0",
     "@typescript-eslint/parser": "^2.8.0",
     "@zeit/ncc": "^0.20.5",
     "eslint": "^5.16.0",

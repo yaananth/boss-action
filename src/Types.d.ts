@@ -18,3 +18,10 @@ export interface IWorkerJson {
   command: string
   worker: string
 }
+
+export interface IWorkflowYmlData {
+  id: string
+  nwo: string
+  worker: string
+  command: string
+}
