@@ -50,7 +50,13 @@ Comment is `hello boss`
 `boss` matches `([\\w+ ]+)` group and hence becomes payload.
 So, worker is triggered with payload `boss_payload_0` with value as `boss`
 
-### To activate `/boss`
+### To activate
+
+> Note: `BOSS_TOKEN` should be added as secret. It is your PAT token with scopes `admin:repo_hook, repo, workflow`. This token creates worker workflow and dispatches events to trigger it. `GITHUB_TOKEN` can't be used as it's limited ([read](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token#using-the-github_token-in-a-workflow))
+
+####  `/boss`
+
+
 ```
 on: issue_comment
 
@@ -67,7 +73,7 @@ jobs:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 ```
 
-### To activate custom slash command
+#### Custom slash command
 ```
 on: issue_comment
 
