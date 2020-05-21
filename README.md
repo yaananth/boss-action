@@ -4,6 +4,8 @@ Run any action as you please using custom slash commands and by sending payloads
 
 ## Usage
 
+[DEMO](https://github.com/yaananth/boss-action/issues/1)
+
 ### workers.json
 
 > This file has to be at `.boss/workers.json` [sample](https://github.com/yaananth/boss-action/tree/master/.boss/workers.json)
