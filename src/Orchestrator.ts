@@ -1,10 +1,13 @@
 import {IOrchestratorData} from './Types'
-import {v4 as uuidv4} from 'uuid'
 import {Yaml} from './Yaml'
+import {createHash} from 'crypto'
 
 export class Orchestrator {
   constructor(data: IOrchestratorData) {
     this._data = data
+    this._id = createHash('md5')
+      .update(this._data.command)
+      .digest('hex')
   }
 
   async runAsync(): Promise<void> {
@@ -36,7 +39,7 @@ export class Orchestrator {
           id: this._id,
           nwo: this._data.nwo,
           worker: workerObj.worker,
-          command: this._data.command
+          workerCommand: workerObj.command
         })
 
         const yaml = new Yaml({
@@ -71,6 +74,6 @@ export class Orchestrator {
   }
 
   private _data: IOrchestratorData
-  private _id: string = uuidv4()
+  private _id: string
   private _bossEnv = (i: number) => `boss_payload_${i}`
 }

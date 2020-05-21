@@ -23,7 +23,7 @@ export interface IWorkflowYmlData {
   id: string
   nwo: string
   worker: string
-  command: string
+  workerCommand: string
 }
 
 export interface IWorkflowYmlResult {
