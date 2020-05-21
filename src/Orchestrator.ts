@@ -23,13 +23,12 @@ export class Orchestrator {
         const yaml = new Yaml(workFlowResult.content)
         yaml.transform()
 
-        console.log(workFlowResult.content)
-        await this._data.helper.pushWorkflow(
-          this._data.nwo,
-          this._data.command,
-          workFlowResult.name,
-          workFlowResult.content
-        )
+        // await this._data.helper.pushWorkflow(
+        //   this._data.nwo,
+        //   this._data.command,
+        //   workFlowResult.name,
+        //   workFlowResult.content
+        // )
       }
     }
   }

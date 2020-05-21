@@ -31,11 +31,7 @@ export class Helper {
       this.YML_EXT(data.worker)
     )
     const name = `BOSS_${data.command}_${data.id}`
-    const content = this.YML_TEMPLATE(
-      name,
-      data.id,
-      await this.getFileAsync(data.nwo, workersYmlPath)
-    )
+    const content = await this.getFileAsync(data.nwo, workersYmlPath)
     return {
       name,
       content
@@ -106,15 +102,4 @@ export class Helper {
   private YML_EXT = (name: string) => `${name}.yml`
   private _actionScopedGitHubClient: Octokit
   private _privateScopedGitHubClient: Octokit
-  private YML_TEMPLATE = (name: string, id: string, content: string) => `
-name: ${name}
-on: 
-  repository_dispatch:
-    types: [${id}]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    ${content}
-  `
 }

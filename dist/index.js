@@ -4253,6 +4253,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const js_yaml_1 = __webpack_require__(186);
 class Yaml {
     constructor(content) {
+        this.YML_TEMPLATE = (name, id, content) => `
+name: ${name}
+on: 
+  repository_dispatch:
+    types: [${id}]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    ${content}
+  `;
         this._data = js_yaml_1.safeLoad(content, {
             schema: js_yaml_1.JSON_SCHEMA
         });
@@ -11293,17 +11304,6 @@ class Helper {
         this.BOSS_WORKERS_DIR = 'workers';
         this.GHUB_WORKFLOW_DIR = path.join('.github', 'workflows');
         this.YML_EXT = (name) => `${name}.yml`;
-        this.YML_TEMPLATE = (name, id, content) => `
-name: ${name}
-on: 
-  repository_dispatch:
-    types: [${id}]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    ${content}
-  `;
         this._actionScopedGitHubClient = new rest_1.Octokit({
             auth: actionToken
         });
@@ -11321,7 +11321,7 @@ jobs:
         return __awaiter(this, void 0, void 0, function* () {
             const workersYmlPath = path.join(this.BOSS_DIR, this.BOSS_WORKERS_DIR, this.YML_EXT(data.worker));
             const name = `BOSS_${data.command}_${data.id}`;
-            const content = this.YML_TEMPLATE(name, data.id, yield this.getFileAsync(data.nwo, workersYmlPath));
+            const content = yield this.getFileAsync(data.nwo, workersYmlPath);
             return {
                 name,
                 content
@@ -26718,8 +26718,12 @@ class Orchestrator {
                     console.log(`Data:${workFlowResult.content}`);
                     const yaml = new Yaml_1.Yaml(workFlowResult.content);
                     yaml.transform();
-                    console.log(workFlowResult.content);
-                    yield this._data.helper.pushWorkflow(this._data.nwo, this._data.command, workFlowResult.name, workFlowResult.content);
+                    // await this._data.helper.pushWorkflow(
+                    //   this._data.nwo,
+                    //   this._data.command,
+                    //   workFlowResult.name,
+                    //   workFlowResult.content
+                    // )
                 }
             }
         });
