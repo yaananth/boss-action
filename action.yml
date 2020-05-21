@@ -1,10 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Boss'
+description: 'The boss which can run other actions'
+author: 'yaananth'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  slash:              # change this
+    description: 'slash command to active boss'
+    default: 'boss'
 runs:
   using: 'node12'
   main: 'dist/index.js'
